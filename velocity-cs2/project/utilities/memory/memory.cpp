@@ -213,7 +213,7 @@ namespace memory {
 		return 0;
 	}
 
-	std::uintptr_t get_module_export_with_base(std::uintptr_t module_base, std::string_view export_name) {
+	std::uintptr_t get_module_export_with_base (std::uintptr_t module_base, std::string_view export_name) {
 		return reinterpret_cast<std::uintptr_t>(GetProcAddress (reinterpret_cast<HMODULE>(module_base), std::string (export_name).c_str ()));
 	}
 
@@ -309,9 +309,7 @@ namespace memory {
 		return 0;
 	}
 
-
 	std::uintptr_t resolve_pattern (std::string_view pattern) {
-		// parse "module.dll:pattern" format
 		const auto colon = pattern.find (':');
 		if (colon == std::string_view::npos) {
 			logging::console::print (xs ("[error] pattern missing module prefix | pattern: {}"), pattern);
@@ -327,7 +325,27 @@ namespace memory {
 			return 0;
 		}
 
-		// rest of function unchanged, just swap pattern -> pattern_str and module_base is now local
+		// === NEW: detect "0x..." RVA format ===
+		if (pattern_str.size () >= 3 && pattern_str [0] == '0' &&
+			(pattern_str [1] == 'x' || pattern_str [1] == 'X')) {
+			std::uintptr_t rva = 0;
+			for (auto i = 2ull; i < pattern_str.size (); ++i) {
+				const auto c = pattern_str [i];
+				std::uint8_t digit = 0;
+				if (c >= '0' && c <= '9')       digit = static_cast<std::uint8_t> (c - '0');
+				else if (c >= 'a' && c <= 'f')  digit = static_cast<std::uint8_t> (c - 'a' + 10);
+				else if (c >= 'A' && c <= 'F')  digit = static_cast<std::uint8_t> (c - 'A' + 10);
+				else break;
+				rva = (rva << 4) | digit;
+			}
+
+			const auto addr = module_base + rva;
+			logging::console::print (xs ("[info] rva resolved | {} + 0x{:X} = 0x{:X}"),
+				module_name, rva, addr);
+			return addr;
+		}
+
+		// rest of function unchanged
 		const auto module_size = get_module_size (module_base);
 		if (!module_size) {
 			logging::console::print (xs ("[error] invalid module size | pattern: {}"), pattern_str);
@@ -468,8 +486,6 @@ done_scanning:
 
 		return nt_headers->OptionalHeader.SizeOfImage;
 	}
-
-
 
 	std::uintptr_t find_vtable_by_rtti (std::uintptr_t module_base, std::string_view class_name) {
 		const auto dos_header = reinterpret_cast<IMAGE_DOS_HEADER*>(module_base);

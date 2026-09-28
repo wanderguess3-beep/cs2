@@ -24,14 +24,14 @@ namespace patterns {
 		"rendersystemdx11.dll:>E8????????4183BDC000000000");
 
 	const ::protection::addresses::address_t& create_move = ADDRESS_IMPL(
-		::protection::addresses::hash("client.dll:FFFFFFFF488D05*????????48890D????????+28~"),
+		::protection::addresses::hash("client.dll:488B C4 4C 89 40 ? 48 89 48 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D"),
 		::protection::addresses::address_type::pattern,
-		"client.dll:FFFFFFFF488D05*????????48890D????????+28~");
+		"client.dll:488B C4 4C 89 40 ? 48 89 48 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D");
 
 	const ::protection::addresses::address_t& csgo_input = ADDRESS_IMPL(
-		::protection::addresses::hash("client.dll:84C0740C488D0D*????????E8????????"),
+		::protection::addresses::hash("client.dll:488905*????????0F57C00F1105"),
 		::protection::addresses::address_type::pattern,
-		"client.dll:84C0740C488D0D*????????E8????????");
+		"client.dll:488905*????????0F57C00F1105");
 
 	const ::protection::addresses::address_t& draw_flash_effect = ADDRESS_IMPL(
 		::protection::addresses::hash("client.dll:85D20F88????????48894C24??5556"),
@@ -408,10 +408,11 @@ namespace patterns {
 		::protection::addresses::address_type::pattern,
 		"client.dll:>E8????????488B8398010000");
 
+	// === ИЗМЕНЕНО: новый паттерн (оффсет 38->60, cmp убран) ===
 	const ::protection::addresses::address_t& prediction_player = ADDRESS_IMPL(
-		::protection::addresses::hash("client.dll:488B4338488905*????????4183FC03"),
+		::protection::addresses::hash("client.dll:488B4360488905*????????"),
 		::protection::addresses::address_type::pattern,
-		"client.dll:488B4338488905*????????4183FC03");
+		"client.dll:488B4360488905*????????");
 
 	const ::protection::addresses::address_t& prediction_process_movement = ADDRESS_IMPL(
 		::protection::addresses::hash("client.dll:8BC5498BD5488BCB>E8????????488B034C8BC5"),
@@ -553,10 +554,11 @@ namespace patterns {
 		::protection::addresses::address_type::pattern,
 		"client.dll:>E8????????4C39B5C8140000");
 
+	// === ИЗМЕНЕНО: новый паттерн (регистр bpl вместо r14b) ===
 	const ::protection::addresses::address_t& simulation_player = ADDRESS_IMPL(
-		::protection::addresses::hash("client.dll:4C3905*????????410F94C6"),
+		::protection::addresses::hash("client.dll:4C3905*????????400F94C5"),
 		::protection::addresses::address_type::pattern,
-		"client.dll:4C3905*????????410F94C6");
+		"client.dll:4C3905*????????400F94C5");
 
 	const ::protection::addresses::address_t& sort_primitives = ADDRESS_IMPL(
 		::protection::addresses::hash("scenesystem.dll:4585C90F84????????5556574883EC30"),

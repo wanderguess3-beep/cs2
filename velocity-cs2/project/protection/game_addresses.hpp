@@ -56,7 +56,8 @@ namespace protection::addresses {
 		interface_,
 		convar,
 		module_base,
-		module_export
+		module_export,
+		rva
 	};
 
 	struct address_data_t {
